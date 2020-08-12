@@ -9,8 +9,9 @@ file = open('newdata.txt', 'w')
 
 c = 0
 
+
 while(c < len(content)):
-	print(c)
+	print(str(c) + ' / ' + str(len(content)))
 	try:
 		if(content[c] == '\n' and content[c + 1] == '\n'):
 			content = content[:c] + content[(c+1):]
@@ -18,6 +19,8 @@ while(c < len(content)):
 	except IndexError:
 		break
 	c += 1
+
+content.replace('\'\'', '\"')
 
 file.write(content)
 file.close()

@@ -7,9 +7,20 @@ from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 import socket
 import ssl
+import time
 ssl._create_default_https_context = ssl._create_unverified_context
 
-currentReadText = '' 
+currentReadText = ''
+toRead = []
+
+class TOCParser(HTMLParser):
+	def handle_starttag(self, tag, attrs):
+		global toRead
+		try:
+			if(tag == 'a' and attrs[0][1] == 'on-navigate-part'):
+				toRead.append('https://www.wattpad.com/' + attrs[1][1])
+		except IndexError:
+			pass
 
 class ParagraphParser(HTMLParser):
 	willRead = False
@@ -25,6 +36,7 @@ class ParagraphParser(HTMLParser):
 			currentReadText += data + '\n'
 
 def getHtml(url):
+	time.sleep(0.1)
 	tries = 10
 	req = urllib.request.Request(url)
 	req.add_header('User-agent', 'Mozilla/5.0 (Linux x86_64)')
@@ -52,6 +64,10 @@ def parseParagraph(soup):
 	pp = ParagraphParser()
 	pp.feed(soup)
 
+def parseTOC(url):
+	tp = TOCParser()
+	tp.feed(getHtml(url))
+
 def readStory(url):
 	global currentReadText
 	page = 1
@@ -63,13 +79,17 @@ def readStory(url):
 		parseParagraph(getHtml(url + '/page/' + str(page)))
 
 def writeParagraphToFile(text):
-	file = open('/Users/yoelkastro/Desktop/writeAI/data.txt', 'a')
+	file = open('data.txt', 'a')
 	file.write(text)
 	file.close
 
-with open('/Users/yoelkastro/Desktop/writeAI/links.txt', 'r') as f:
+with open('links.txt', 'r') as f:
 	content = f.read().splitlines()
 
-for l in content:
-	print(l)
-	readStory(l)
+for s in content:
+	parseTOC(s)
+	for chapter in toRead:
+		print(chapter)
+		readStory(chapter)
+	toRead = []
+

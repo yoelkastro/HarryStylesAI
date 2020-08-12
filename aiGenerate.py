@@ -6,7 +6,7 @@ import json
 
 params = {}
 
-with open('/Users/yoelkastro/Desktop/writeAI/params.json') as js:
+with open('params.json') as js:
 	data = json.load(js)
 
 	params['batch_size'] = data['batch_size']
