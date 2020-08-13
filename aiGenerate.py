@@ -51,6 +51,7 @@ def generateText(model, startString):
 	model.reset_states()
 
 	while(len(textGenerated) < numGenerate or textGenerated[-1] != '.'):
+		print(len(textGenerated))
 		predictions = model(inputEval)
 		predictions = tf.squeeze(predictions, 0)
 

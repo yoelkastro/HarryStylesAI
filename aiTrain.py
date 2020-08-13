@@ -10,7 +10,7 @@ BATCH_SIZE = 10
 BUFFER_SIZE = 10000
 
 #path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
-path_to_file = '/Users/yoelkastro/Desktop/writeAI/data.txt'
+path_to_file = 'data.txt'
 
 text = open(path_to_file, 'rb').read().decode(encoding='utf-8')
 vocab = sorted(set(text))
@@ -54,7 +54,7 @@ params['embedding_dim'] = embeddingDim
 params['rnn_units'] = rnnUnits
 params['vocab_size'] = len(vocab)
 
-with open('/Users/yoelkastro/Desktop/writeAI/params.json', 'w') as outfile:
+with open('params.json', 'w') as outfile:
     json.dump(params, outfile)
 
 def loss(labels, logits):
